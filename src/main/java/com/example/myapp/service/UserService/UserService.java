@@ -20,6 +20,10 @@ public class UserService {
         this.jwt = jwt;
     }
 
+    public User getUserByUserName(String userName){
+        User user = userRepository.findByUserName(userName).get(0);
+        return user;
+    }
     public String createUser(User user){
         try{
             if (userRepository.findByUserName(user.getUserName()).size() == 0){

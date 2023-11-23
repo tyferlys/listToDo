@@ -13,7 +13,7 @@ import java.util.Date;
 public class JWT {
         @Value("${jwt.secretKey}")
         private String SECRET_KEY;
-        private int timeEnd = 1000 * 30; // сутки
+        private int timeEnd = 1000 * 60 * 60 * 24; // сутки по плану
 
         public String getSECRET_KEY() {
             return SECRET_KEY;

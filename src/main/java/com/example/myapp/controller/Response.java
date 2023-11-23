@@ -1,17 +1,13 @@
 package com.example.myapp.controller;
 
-public class Response {
+public class Response<T> {
 
     private int status;
-    private String text;
+    private T data;
 
-    public Response() {
-
-    }
-
-    public Response(int status, String text) {
+    public Response(int status, T data) {
         this.status = status;
-        this.text = text;
+        this.data = data;
     }
 
     public int getStatus() {
@@ -22,11 +18,11 @@ public class Response {
         this.status = status;
     }
 
-    public String getText() {
-        return text;
+    public T getData() {
+        return data;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setData(T data) {
+        this.data = data;
     }
 }

@@ -1,6 +1,12 @@
 package com.example.myapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "_user")
@@ -28,6 +34,19 @@ public class User {
 
     @Column(name = "email")
     private String email;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Note> notes;
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+    }
 
     public Integer getId() {
         return id;

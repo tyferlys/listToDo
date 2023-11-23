@@ -18,41 +18,51 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("{token}")
-    public ResponseEntity checkUser(@PathVariable String token){
+    @GetMapping("")
+    public ResponseEntity getUser(@CookieValue(name = "token", required = false) String token){
+        String response = userService.checkToken(token);
+        User user = userService.getUserByUserName(response);
+
+        System.out.println(user.getNotes().get(0).getUser().getUserName());
+
+        return ResponseEntity.ok().body(new Response<User>(0, user));
+    }
+
+    @GetMapping("check")
+    public ResponseEntity checkUser(@CookieValue(name = "token", required = false) String token){
         String response = userService.checkToken(token);
 
         if (response.equals("токен истек"))
-            return ResponseEntity.badRequest().body(new Response(1, response));
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
         else if (response.equals("неправильная сигнатура токена"))
-            return ResponseEntity.badRequest().body(new Response(1, response));
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
         else if (response.equals("токен некорректен или пуст"))
-            return ResponseEntity.badRequest().body(new Response(1, response));
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
         else if (response.equals("неверный токен"))
-            return ResponseEntity.badRequest().body(new Response(1, response));
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
 
         return ResponseEntity.ok().body(new Response(0, response));
     }
 
-    @GetMapping("{userName}/{password}")
+    @GetMapping("login/{userName}/{password}")
     public ResponseEntity loginUser(@PathVariable String userName, @PathVariable String password){
-        String responseStatus = userService.loginUser(userName, password);
+        String response = userService.loginUser(userName, password);
 
-        if (responseStatus.equals("Неправильный логин или пароль"))
-            return ResponseEntity.badRequest().body(new Response(1, responseStatus));
+        if (response.equals("Неправильный логин или пароль"))
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
 
-        return ResponseEntity.ok().body(new Response(0, responseStatus));
+        return ResponseEntity.ok().body(new Response<String>(0, response));
     }
 
-    @PostMapping("")
+    @PostMapping("create")
     public ResponseEntity createUser(@RequestBody User user){
-        int responseStatus = Integer.parseInt(userService.createUser(user));
+        int response = Integer.parseInt(userService.createUser(user));
 
-        if (responseStatus == 0)
-            return ResponseEntity.ok().body(new Response(responseStatus, "Пользователь создан"));
-        else if (responseStatus == 1)
-            return ResponseEntity.badRequest().body(new Response(responseStatus, "Пользователь уже существует"));
+        if (response == 0)
+            return ResponseEntity.ok().body(new Response<String>(response, "Пользователь создан"));
+        else if (response == 1)
+            return ResponseEntity.badRequest().body(new Response<String>(response, "Пользователь уже существует"));
         else
-            return ResponseEntity.badRequest().body(new Response(responseStatus, "Ошибка при создании"));
+            return ResponseEntity.badRequest().body(new Response<String>(response, "Ошибка при создании"));
     }
 }
