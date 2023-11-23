@@ -18,8 +18,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("{token}")
-    public ResponseEntity checkUser(@PathVariable String token){
+    @GetMapping("check")
+    public ResponseEntity checkUser(@CookieValue(name = "token", required = false) String token){
         String response = userService.checkToken(token);
 
         if (response.equals("токен истек"))
@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok().body(new Response(0, response));
     }
 
-    @GetMapping("{userName}/{password}")
+    @GetMapping("login/{userName}/{password}")
     public ResponseEntity loginUser(@PathVariable String userName, @PathVariable String password){
         String responseStatus = userService.loginUser(userName, password);
 
@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok().body(new Response(0, responseStatus));
     }
 
-    @PostMapping("")
+    @PostMapping("create")
     public ResponseEntity createUser(@RequestBody User user){
         int responseStatus = Integer.parseInt(userService.createUser(user));
 
