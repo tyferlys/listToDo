@@ -26,7 +26,6 @@ public class NoteController {
     public ResponseEntity getNoteById(@PathVariable Integer id){
         try{
             Note note = noteService.getNoteById(id);
-
             return ResponseEntity.ok().body(new Response<Note>(0, note));
         }
         catch (Exception ex){
