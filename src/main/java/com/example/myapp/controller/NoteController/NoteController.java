@@ -29,7 +29,7 @@ public class NoteController {
             return ResponseEntity.ok().body(new Response<Note>(0, note));
         }
         catch (Exception ex){
-            return ResponseEntity.badRequest().body(new Response<String>(1, "Заметка не найденf"));
+            return ResponseEntity.badRequest().body(new Response<String>(1, "Заметка не найдена"));
         }
     }
 
