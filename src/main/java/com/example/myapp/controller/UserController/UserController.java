@@ -41,7 +41,7 @@ public class UserController {
         else if (response.equals("неверный токен"))
             return ResponseEntity.badRequest().body(new Response<String>(1, response));
 
-        return ResponseEntity.ok().body(new Response(0, response));
+        return ResponseEntity.ok().body(new Response<String>(0, response));
     }
 
     @GetMapping("login/{userName}/{password}")
