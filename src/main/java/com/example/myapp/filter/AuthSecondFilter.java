@@ -27,7 +27,7 @@ public class AuthSecondFilter extends OncePerRequestFilter {
             if (isAuth.equals("false")){
                 response.setStatus(400);
 
-                Response errorResponseObject = new Response(400, "Invalid token");
+                Response errorResponseObject = new Response<String>(400, "Invalid token");
                 ObjectMapper objectMapper = new ObjectMapper();
                 String jsonError = objectMapper.writeValueAsString(errorResponseObject);
 
@@ -36,7 +36,7 @@ public class AuthSecondFilter extends OncePerRequestFilter {
             }
         }
         else{
-            Response errorResponseObject = new Response(400, "Invalid token");
+            Response errorResponseObject = new Response<String>(400, "Invalid token");
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonError = objectMapper.writeValueAsString(errorResponseObject);
 
