@@ -25,6 +25,23 @@ public class NoteService {
         return note;
     }
 
+    public String deleteNoteById(Integer id){
+        try {
+            try{
+                Note note = noteRepository.findById(id).get();
+
+                noteRepository.deleteById(id);
+                return "заметка удалена";
+            }
+            catch (Exception ex){
+                return "Заметки не существует";
+            }
+        }
+        catch (Exception ex){
+            return "Ошибка при удалении заметки";
+        }
+    }
+
     public String createNote(NoteModelRequest noteModel){
 
         if (noteModel.getTitle().trim() != ""){

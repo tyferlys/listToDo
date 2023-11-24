@@ -42,4 +42,15 @@ public class NoteController {
         else
             return ResponseEntity.badRequest().body(new Response<String>(1,"Ошибка при создании заметки"));
     }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity deleteNote(@PathVariable Integer id){
+        String response = noteService.deleteNoteById(id);
+
+        if (response == "заметка удалена"){
+            return ResponseEntity.ok().body(new Response<String>(0, response));
+        }
+        else
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
+    }
 }
