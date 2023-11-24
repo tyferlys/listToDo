@@ -1,6 +1,7 @@
 package com.example.myapp.controller.UserController;
 
 import com.example.myapp.controller.Response;
+import com.example.myapp.enums.UserStatus;
 import com.example.myapp.model.User;
 import com.example.myapp.service.UserService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,13 @@ public class UserController {
     public ResponseEntity checkUser(@CookieValue(name = "token", required = false) String token){
         String response = userService.checkToken(token);
 
-        if (response.equals("токен истек"))
+        if (response.equals(UserStatus.ERROR_TOKEN_TIMEOVER.getText()))
             return ResponseEntity.badRequest().body(new Response<String>(1, response));
-        else if (response.equals("неправильная сигнатура токена"))
+        else if (response.equals(UserStatus.ERROR_TOKEN_SIGNATURE.getText()))
             return ResponseEntity.badRequest().body(new Response<String>(1, response));
-        else if (response.equals("токен некорректен или пуст"))
+        else if (response.equals(UserStatus.ERROR_TOKEN_INCORRECT_OR_NULL.getText()))
             return ResponseEntity.badRequest().body(new Response<String>(1, response));
-        else if (response.equals("неверный токен"))
+        else if (response.equals(UserStatus.ERROR_FALSE_TOKEN.getText()))
             return ResponseEntity.badRequest().body(new Response<String>(1, response));
 
         return ResponseEntity.ok().body(new Response<String>(0, response));
@@ -48,7 +49,7 @@ public class UserController {
     public ResponseEntity loginUser(@PathVariable String userName, @PathVariable String password){
         String response = userService.loginUser(userName, password);
 
-        if (response.equals("Неправильный логин или пароль"))
+        if (response.equals(UserStatus.ERROR_IN_LOGIN_PASSWORD.getText()))
             return ResponseEntity.badRequest().body(new Response<String>(1, response));
 
         return ResponseEntity.ok().body(new Response<String>(0, response));
@@ -56,13 +57,13 @@ public class UserController {
 
     @PostMapping("create")
     public ResponseEntity createUser(@RequestBody User user){
-        int response = Integer.parseInt(userService.createUser(user));
+        String response = userService.createUser(user);
 
-        if (response == 0)
-            return ResponseEntity.ok().body(new Response<String>(response, "Пользователь создан"));
-        else if (response == 1)
-            return ResponseEntity.badRequest().body(new Response<String>(response, "Пользователь уже существует"));
+        if (response.equals(UserStatus.USER_CREATE.getText()))
+            return ResponseEntity.ok().body(new Response<String>(0, response));
+        else if (response.equals(UserStatus.ERROR_USER_LOGIN_EXIST.getText()))
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
         else
-            return ResponseEntity.badRequest().body(new Response<String>(response, "Ошибка при создании"));
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
     }
 }

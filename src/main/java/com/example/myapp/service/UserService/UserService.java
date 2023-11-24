@@ -1,5 +1,6 @@
 package com.example.myapp.service.UserService;
 
+import com.example.myapp.enums.UserStatus;
 import com.example.myapp.model.User;
 import com.example.myapp.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -28,16 +29,16 @@ public class UserService {
         try{
             if (userRepository.findByUserName(user.getUserName()).size() == 0){
                 if (user.getPassword().trim().equals("") || user.getUserName().trim().equals(""))
-                    return "2";
+                    return UserStatus.ERROR_CREATE_USER.getText();
 
                 userRepository.save(user);
-                return "0";
+                return UserStatus.USER_CREATE.getText();
             }
             else
-                return "1";
+                return UserStatus.ERROR_USER_LOGIN_EXIST.getText();
         }
         catch (Exception ex){
-            return "2";
+            return UserStatus.ERROR_CREATE_USER.getText();
         }
     }
 
@@ -47,7 +48,7 @@ public class UserService {
             return token;
         }
         else
-            return "Неправильный логин или пароль";
+            return UserStatus.ERROR_IN_LOGIN_PASSWORD.getText();
     }
 
     public String checkToken(String token){
@@ -57,16 +58,16 @@ public class UserService {
             return data.getSubject();
         }
         catch (ExpiredJwtException ex){
-            return "токен истек";
+            return UserStatus.ERROR_TOKEN_TIMEOVER.getText();
         }
         catch (SignatureException ex){
-            return "неправильная сигнатура токена";
+            return UserStatus.ERROR_TOKEN_SIGNATURE.getText();
         }
         catch (IllegalArgumentException ex){
-            return  "токен некорректен или пуст";
+            return UserStatus.ERROR_TOKEN_INCORRECT_OR_NULL.getText();
         }
         catch (Exception ex){
-            return "неверный токен";
+            return UserStatus.ERROR_FALSE_TOKEN.getText();
         }
     }
 }
