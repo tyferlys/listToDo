@@ -26,6 +26,10 @@ public class NoteService {
         Note note = noteRepository.findById(id).get();
         return note;
     }
+    public List<Note> getNoteByUserName(String userName, Integer limit){
+        List<Note> notes = noteRepository.findAll().stream().limit(limit).filter(note -> note.getUser().getUserName().equals(userName)).toList();
+        return notes;
+    }
     public List<Note> getNoteByUserId(Integer id, Integer limit){
         List<Note> notes = noteRepository.findAll().stream().limit(limit).filter(note -> note.getUser().getId() == id).toList();
         return notes;

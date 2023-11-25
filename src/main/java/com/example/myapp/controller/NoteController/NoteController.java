@@ -39,10 +39,24 @@ public class NoteController {
         }
     }
     /**
+     * Получение заметки по userName создателя и количество записей (limit)
+     * Возвращаает массив заметок или ошибку
+     * **/
+    @GetMapping("/userName/{userName}/{limit}")
+    public ResponseEntity getNoteByUserName(@PathVariable("userName") String userName, @PathVariable("limit") Integer limit){
+        try{
+            List<Note> notes = noteService.getNoteByUserName(userName, limit);
+            return ResponseEntity.ok().body(new Response<List<Note>>(0, notes));
+        }
+        catch (Exception ex){
+            return ResponseEntity.badRequest().body(new Response<String>(1, "Ошибка при поиске заметки"));
+        }
+    }
+    /**
      * Получение заметки по id создателя и количество записей (limit)
      * Возвращаает массив заметок или ошибку
      * **/
-    @GetMapping("/user/{id}/{limit}")
+    @GetMapping("/userId/{id}/{limit}")
     public ResponseEntity getNoteByUserId(@PathVariable("id") Integer id, @PathVariable("limit") Integer limit){
         try{
             List<Note> notes = noteService.getNoteByUserId(id, limit);
