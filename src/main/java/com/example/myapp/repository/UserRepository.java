@@ -14,4 +14,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query(value = "SELECT u FROM User u WHERE u.userName = :userName AND u.password = :password")
     List<User> findByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
+
+    @Query(value = "DELETE FROM User u WHERE u.userName = :userName")
+    void deleteByUserName(@Param("userName") String userName);
 }

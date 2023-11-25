@@ -19,51 +19,65 @@ public class UserController {
         this.userService = userService;
     }
 
+    //GET ЗАПРОСЫ-----------------------------------------------------------------------------------
+    /**
+     * Получение пользователя по токену, который находится в куки
+     * Возваращает модель пользователя
+     * **/
     @GetMapping("")
     public ResponseEntity getUser(@CookieValue(name = "token", required = false) String token){
-        String response = userService.checkToken(token);
-        User user = userService.getUserByUserName(response);
+        try{
+            String response = userService.checkToken(token);
+            User user = userService.getUserByUserName(response);
 
-        System.out.println(user.getNotes().get(0).getUser().getUserName());
-
-        return ResponseEntity.ok().body(new Response<User>(0, user));
+            return ResponseEntity.ok().body(new Response<User>(0, user));
+        }
+        catch (Exception ex){
+            return ResponseEntity.badRequest().body(new Response<String>(1, ex.getMessage()));
+        }
     }
+    /**
+     * Поолучение пользователя по Id
+     * Возваращает модель пользователя
+     * **/
+    @GetMapping("{id}")
+    public ResponseEntity getUserById(@PathVariable("id") Integer id){
+        try{
+            User user = userService.getUserById(id);
+            return ResponseEntity.ok().body(new Response<User>(0, user));
+        }
+        catch (Exception ex){
+            return ResponseEntity.badRequest().body(new Response<String>(1, ex.getMessage()));        }
+        }
+    //DELETE ЗАПРОСЫ-----------------------------------------------------------------------------------
+    /**
+     * Удаление пользователя по токену, который находится в куки
+     * **/
+    @DeleteMapping("")
+    public ResponseEntity deleteUser(@CookieValue(name = "token", required = false) String token){
+        try{
+            String response = userService.checkToken(token);
+            userService.deleteUserByUserName(response);
 
-    @GetMapping("check")
-    public ResponseEntity checkUser(@CookieValue(name = "token", required = false) String token){
-        String response = userService.checkToken(token);
-
-        if (response.equals(UserStatus.ERROR_TOKEN_TIMEOVER.getText()))
-            return ResponseEntity.badRequest().body(new Response<String>(1, response));
-        else if (response.equals(UserStatus.ERROR_TOKEN_SIGNATURE.getText()))
-            return ResponseEntity.badRequest().body(new Response<String>(1, response));
-        else if (response.equals(UserStatus.ERROR_TOKEN_INCORRECT_OR_NULL.getText()))
-            return ResponseEntity.badRequest().body(new Response<String>(1, response));
-        else if (response.equals(UserStatus.ERROR_FALSE_TOKEN.getText()))
-            return ResponseEntity.badRequest().body(new Response<String>(1, response));
-
-        return ResponseEntity.ok().body(new Response<String>(0, response));
+            return ResponseEntity.ok().body(new Response<String>(0, "удален"));
+        }
+        catch (Exception ex){
+            return ResponseEntity.badRequest().body(new Response<String>(1, ex.getMessage()));
+        }
     }
-
-    @GetMapping("login/{userName}/{password}")
-    public ResponseEntity loginUser(@PathVariable String userName, @PathVariable String password){
-        String response = userService.loginUser(userName, password);
-
-        if (response.equals(UserStatus.ERROR_IN_LOGIN_PASSWORD.getText()))
-            return ResponseEntity.badRequest().body(new Response<String>(1, response));
-
-        return ResponseEntity.ok().body(new Response<String>(0, response));
+    /**
+     * Удаление пользователя по id
+     * **/
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteUserById(@PathVariable Integer id){
+        try{
+            userService.deleteUserById(id);
+            return ResponseEntity.ok().body(new Response<String>(0, "удален"));
+        }
+        catch (Exception ex){
+            return ResponseEntity.badRequest().body(new Response<String>(1, ex.getMessage()));
+        }
     }
+    //PUT ЗАПРОСЫ-----------------------------------------------------------------------------------
 
-    @PostMapping("create")
-    public ResponseEntity createUser(@RequestBody User user){
-        String response = userService.createUser(user);
-
-        if (response.equals(UserStatus.USER_CREATE.getText()))
-            return ResponseEntity.ok().body(new Response<String>(0, response));
-        else if (response.equals(UserStatus.ERROR_USER_LOGIN_EXIST.getText()))
-            return ResponseEntity.badRequest().body(new Response<String>(1, response));
-        else
-            return ResponseEntity.badRequest().body(new Response<String>(1, response));
-    }
 }

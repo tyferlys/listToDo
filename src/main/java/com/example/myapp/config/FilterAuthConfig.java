@@ -18,7 +18,7 @@ public class FilterAuthConfig {
 
         registrationBean.addUrlPatterns(
                 "/note/*",
-                "/user"
+                "/user/*"
         );
         registrationBean.setOrder(2);
 
