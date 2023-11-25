@@ -78,6 +78,19 @@ public class UserController {
             return ResponseEntity.badRequest().body(new Response<String>(1, ex.getMessage()));
         }
     }
-    //PUT ЗАПРОСЫ-----------------------------------------------------------------------------------
-
+    //PATCH ЗАПРОСЫ-----------------------------------------------------------------------------------
+    /**
+     * Обновление пользователя по телу запроса, беру логин из тела запроса
+     * Возвращает обновленного пользователя или ошибку
+     * **/
+    @PatchMapping("")
+    public ResponseEntity patchUser( @RequestBody User user){
+        try{
+            User newUser = userService.updateUser(user);
+            return ResponseEntity.ok().body(new Response<User>(0, newUser));
+        }
+        catch (Exception ex){
+            return ResponseEntity.badRequest().body(new Response<String>(1, "Ошибка при обнолении пользователя"));
+        }
+    }
 }

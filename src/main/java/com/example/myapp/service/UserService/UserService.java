@@ -24,12 +24,10 @@ public class UserService {
     //GET МЕТОДЫ-----------------------------------------------------------------------------------
     public User getUserById(Integer id){
         User user = userRepository.findById(id).get();
-
         return user;
     }
     public User getUserByUserName(String userName){
         User user = userRepository.findByUserName(userName).get(0);
-
         return user;
     }
     //DELETE МЕТОДЫ-----------------------------------------------------------------------------------
@@ -40,11 +38,13 @@ public class UserService {
         userRepository.deleteByUserName(userName);
     }
     //PUT МЕТОДЫ-----------------------------------------------------------------------------------
-
+    public User updateUser(User newUser){
+        userRepository.save(newUser);
+        return userRepository.findByUserName(newUser.getUserName()).get(0);
+    }
     //ПРОВЕРКА ТОКЕНА НА ВАЛИДНОСТЬ И ПОЛУЧЕНИЯ ЛОГИНА ИЗ ТОКЕНА
     public String checkToken(String token){
         Claims data = jwt.decodeToken(token);
-
         return data.getSubject();
     }
 }
