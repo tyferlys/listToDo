@@ -7,6 +7,8 @@ import com.example.myapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class NoteService {
 
@@ -24,7 +26,10 @@ public class NoteService {
         Note note = noteRepository.findById(id).get();
         return note;
     }
-
+    public List<Note> getNoteByUserId(Integer id, Integer limit){
+        List<Note> notes = noteRepository.findAll().stream().limit(limit).filter(note -> note.getUser().getId() == id).toList();
+        return notes;
+    }
     public String deleteNoteById(Integer id){
         try {
             try{

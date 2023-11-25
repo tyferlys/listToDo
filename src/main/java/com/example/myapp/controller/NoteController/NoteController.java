@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("note")
 public class NoteController {
@@ -21,7 +23,11 @@ public class NoteController {
         this.userService = userService;
         this.noteService = noteService;
     }
-
+    //GET ЗАПРОСЫ-----------------------------------------------------------------------------------
+    /**
+     * Получение заметки по id
+     * Возвращает заметку или ошибку
+     * **/
     @GetMapping("/{id}")
     public ResponseEntity getNoteById(@PathVariable Integer id){
         try{
@@ -29,11 +35,29 @@ public class NoteController {
             return ResponseEntity.ok().body(new Response<Note>(0, note));
         }
         catch (Exception ex){
-            return ResponseEntity.badRequest().body(new Response<String>(1, "Заметка не найдена"));
+            return ResponseEntity.badRequest().body(new Response<String>(1, "Ошибка при поиске заметки"));
         }
     }
-
-    @PostMapping("create")
+    /**
+     * Получение заметки по id создателя и количество записей (limit)
+     * Возвращаает массив заметок или ошибку
+     * **/
+    @GetMapping("/user/{id}/{limit}")
+    public ResponseEntity getNoteByUserId(@PathVariable("id") Integer id, @PathVariable("limit") Integer limit){
+        try{
+            List<Note> notes = noteService.getNoteByUserId(id, limit);
+            return ResponseEntity.ok().body(new Response<List<Note>>(0, notes));
+        }
+        catch (Exception ex){
+            return ResponseEntity.badRequest().body(new Response<String>(1, "Ошибка при поиске заметки"));
+        }
+    }
+    //POST ЗАПРОСЫ-----------------------------------------------------------------------------------
+    /**
+     * Создание заметки - логин пользователя и название заметки
+     * Возвращает статус - создана ли заметка
+     * **/
+    @PostMapping("")
     public ResponseEntity createNote(@RequestBody NoteModelRequest note){
         int response = Integer.parseInt(noteService.createNote(note));
 
@@ -42,9 +66,13 @@ public class NoteController {
         else
             return ResponseEntity.badRequest().body(new Response<String>(1,"Ошибка при создании заметки"));
     }
-
+    //DELETE ЗАПРОСЫ-----------------------------------------------------------------------------------
+    /**
+     * Удаление заметки по id
+     * Возвращает статус, удалена ли заметка
+     * **/
     @DeleteMapping("delete/{id}")
-    public ResponseEntity deleteNote(@PathVariable Integer id){
+    public ResponseEntity deleteNoteById(@PathVariable Integer id){
         String response = noteService.deleteNoteById(id);
 
         if (response == "заметка удалена"){
@@ -53,4 +81,8 @@ public class NoteController {
         else
             return ResponseEntity.badRequest().body(new Response<String>(1, response));
     }
+    /**
+     * Удаление заметки по id создателя
+     * Возвращает статус, удалены ли заметки
+     * **/
 }
