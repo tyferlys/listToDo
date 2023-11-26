@@ -35,19 +35,24 @@ public class NoteService {
         return notes;
     }
     public String deleteNoteById(Integer id){
-        try {
-            try{
-                Note note = noteRepository.findById(id).get();
+        try{
+            Note note = noteRepository.findById(id).get();
 
-                noteRepository.deleteById(id);
-                return "заметка удалена";
-            }
-            catch (Exception ex){
-                return "Заметки не существует";
-            }
+            noteRepository.deleteById(id);
+            return "заметка удалена";
         }
         catch (Exception ex){
             return "Ошибка при удалении заметки";
+        }
+    }
+
+    public String deleteNoteByUserId(Integer id){
+        try{
+            noteRepository.deleteByUserId(id);
+            return "заметка удалена";
+        }
+        catch (Exception ex){
+            return ex.getMessage();
         }
     }
 

@@ -85,7 +85,7 @@ public class NoteController {
      * Удаление заметки по id
      * Возвращает статус, удалена ли заметка
      * **/
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity deleteNoteById(@PathVariable Integer id){
         String response = noteService.deleteNoteById(id);
 
@@ -99,4 +99,14 @@ public class NoteController {
      * Удаление заметки по id создателя
      * Возвращает статус, удалены ли заметки
      * **/
+    @DeleteMapping("userId/{id}")
+    public ResponseEntity deleteNoteByUserId(@PathVariable Integer id){
+        String response = noteService.deleteNoteByUserId(id);
+
+        if (response == "заметка удалена"){
+            return ResponseEntity.ok().body(new Response<String>(0, response));
+        }
+        else
+            return ResponseEntity.badRequest().body(new Response<String>(1, response));
+    }
 }
